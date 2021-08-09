@@ -2,6 +2,8 @@ import React from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 
 import * as urlPaths from '../constants/paths';
+import MyProfile from "./MyProfile";
+
 
 function Main(props) {
     const { signedIn, signedInSuccess } = props;
@@ -14,8 +16,9 @@ function Main(props) {
         );
     };
 
+
     const showMyProfile = () => {
-        return signedIn ? <div>myProfile</div> : <Redirect to={urlPaths.SIGN_IN_PATH} />;
+        return signedIn ? <MyProfile signedIn = { signedIn } /> : <Redirect to={urlPaths.SIGN_IN_PATH} />;
     };
 
     return (
