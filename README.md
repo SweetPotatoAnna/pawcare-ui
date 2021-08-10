@@ -3,3 +3,5 @@
 - ``` npm start ``` to start this app.
 
 Anna Chen
+
+Fu Guo
