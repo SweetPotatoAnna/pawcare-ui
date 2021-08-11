@@ -3,3 +3,6 @@
 - ``` npm start ``` to start this app.
 
 Anna Chen
+Haixiang Zhang
+Jingyuan Peng
+
