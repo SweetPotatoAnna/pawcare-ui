@@ -16,7 +16,7 @@ function Main(props) {
     };
 
     const showMyProfile = () => {
-        return signedIn ? <MyProfile signedIn = { signedIn } /> : <Redirect to={urlPaths.SIGN_IN_PATH} />;
+        return signedIn ? <MyProfile /> : <Redirect to={urlPaths.SIGN_IN_PATH} />;
     };
 
     return (

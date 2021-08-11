@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { Card, List, Descriptions, Avatar, Button, message } from 'antd';
 import axios from "axios";
+
 import {TOKEN_KEY as userToken} from "../constants/constants";
 import {Redirect} from "react-router-dom";
 import * as urlPaths from "../constants/paths";
@@ -56,14 +57,14 @@ class MyProfile extends Component {
         axios(optGetProfile)
             .then((res) => {
                 if (res.status === 200) {
-                    this.setState(
-                        this.userProfile = res,
-                    );
+                    this.setState({
+                        userProfile: res
+                    })
                 }
             })
             .catch((err) => {
                 message.error("Get user profile failed!");
-                console.log("Get user profile failed: ", err.message);
+                // console.log("Get user profile failed: ", err.message);
             });
 
         const optGetPets = {
@@ -76,9 +77,9 @@ class MyProfile extends Component {
         axios(optGetPets)
             .then((res) => {
                 if (res.status === 200) {
-                    this.setState(
-                        this.pets = res,
-                    );
+                    this.setState({
+                        pets: res,
+                    })
                     if (this.state.pets[0]) {
                         this.hadPets = true;
                     }
@@ -86,7 +87,7 @@ class MyProfile extends Component {
             })
             .catch((err) => {
                 message.error("Get pets info failed!");
-                console.log("Get pets info failed: ", err.message);
+                // console.log("Get pets info failed: ", err.message);
             });
     }
 
