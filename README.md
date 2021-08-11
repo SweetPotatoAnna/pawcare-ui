@@ -2,5 +2,9 @@
 - ``` npm install ``` to install dependencies.
 - ``` npm start ``` to start this app.
 
+
+Anna Chen
+Fu Guo
 Anna Chen 
 Ziyao Jiang
+
