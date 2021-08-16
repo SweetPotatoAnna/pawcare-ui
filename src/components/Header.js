@@ -7,6 +7,7 @@ import * as urlPaths from '../constants/paths';
 
 function Header(props) {
     const { signedIn, history, signedOutSuccess } = props;
+
     return (
         <header className='navbar'>
             <img className='navbar-logo' src={pawcareLogo} alt='PawCare Logo' />
@@ -22,6 +23,6 @@ function Header(props) {
             }
         </header>
     );
-}
+};
 
 export default withRouter(Header);

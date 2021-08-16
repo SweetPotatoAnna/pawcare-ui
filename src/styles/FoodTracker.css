@@ -1,0 +1,42 @@
+.food-tracker {
+    width: 75%;
+    span: 16;
+    margin: 0 auto;
+}
+
+.add-food-bar {
+    /*padding: 50px;*/
+    width: 300px;
+    margin: 0 auto;
+    display:inline;
+}
+
+.add-food-bar-input-box {
+    /*width: 300px;*/
+
+    span: 12;
+}
+
+.add-food-bar-btn {
+    display:inline;
+}
+
+
+
+
+
+
+.editable-cell {
+    position: relative;
+}
+
+.editable-cell-value-wrap {
+    padding: 5px 12px;
+    cursor: pointer;
+}
+
+.editable-row:hover .editable-cell-value-wrap {
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    padding: 4px 11px;
+}
