@@ -20,26 +20,27 @@ class MyProfile extends Component {
             ,
             pets:
                 [
-                    {
-                        // name: "coco",
-                        // photo: "XXX",
-                        // type: "XXXX",
-                        // weight: "XXX",
-                        // ageyear: "XXXX",
-                        // agemonth: "XXXX",
-                        // sex: "XXX",
-                        // breed: "XXXX"
-                    },
-                    {
-                        // name: "XXXX",
-                        // photo: "XXX",
-                        // type: "XXXX",
-                        // weight: "XXX",
-                        // ageyear: "XXXX",
-                        // agemonth: "XXXX",
-                        // sex: "XXX",
-                        // breed: "XXXX"
-                    }]
+                //     {
+                //         name: "coco",
+                //         photo: "XXX",
+                //         type: "XXXX",
+                //         weight: "XXX",
+                //         ageyear: "XXXX",
+                //         agemonth: "XXXX",
+                //         sex: "XXX",
+                //         breed: "XXXX"
+                //     },
+                //     {
+                //         name: "XXXX",
+                //         photo: "XXX",
+                //         type: "XXXX",
+                //         weight: "XXX",
+                //         ageyear: "XXXX",
+                //         agemonth: "XXXX",
+                //         sex: "XXX",
+                //         breed: "XXXX"
+                //     }
+                ]
         }
     }
 
@@ -98,47 +99,50 @@ class MyProfile extends Component {
         const { email, firstName, lastName } = this.state.userProfile;
 
         return (
-            <>
-                <div style={{ padding: '20px 80px 20px 80px' }}>
+            <div className="myProfile">
+                <div style={{margin: '20px', }}>
                     <Descriptions
-                        title={<h1>My Profile</h1>}
+                        title={<h1 className="title">My Profile</h1>}
                         column={1}
                     >
-                        <Descriptions.Item label="Email Address">{ email }</Descriptions.Item>
-                        <Descriptions.Item label="Full Name">{ firstName } { lastName }</Descriptions.Item>
+                        <Descriptions.Item label="Email Address">{email}</Descriptions.Item>
+                        <Descriptions.Item label="Full Name">{firstName} {lastName}</Descriptions.Item>
                     </Descriptions>
-                    <hr />
-
-                    <div>
-                        <h3 style={{ marginBottom: 16 }}>My Pets:</h3>
-                        <List
-                            // bordered
-                            dataSource={pets}
-                            renderItem={pet => (
-                                <div>
-                                    <List.Item>
-                                        <Card title={pet.name} bordered={true} extra={<a href="#">Edit</a>}>
-                                            <Card.Meta className="PetPhoto"
-                                                       avatar={<Avatar src={pet.photo} />}
-                                                       description={pet.name}
-                                            />
-                                            <p>{pet.type}</p>
-                                            <p>{pet.weight}</p>
-                                            <p>{pet.ageyear} years {pet.agemonth} months old, {pet.weight} lbs</p>
-                                        </Card>
-                                    </List.Item>
-
-                                </div>
-                            )}
-                        />
-                    </div>
-                    <Button
-                        href="#"
-                        className="add-pet-btn"
-                        size="large"
-                    >Add Pet</Button>
                 </div>
-            </>
+
+                <hr/>
+
+                <div>
+                    <h2 style={{marginBottom: 16}} className="my-pets-title">My Pets:</h2>
+                    <List
+                        className="my-pets-list"
+                        // bordered
+                        dataSource={pets}
+                        renderItem={pet => (
+                            <div>
+                                <List.Item>
+                                    <Card title={pet.name} bordered={true} extra={<a href="#">Edit</a>}
+                                          style={{width: '100%'}}>
+                                        <Card.Meta className="PetPhoto"
+                                                   avatar={<Avatar src={pet.photo}/>}
+                                                   description={pet.name}
+                                        />
+                                        <p>{pet.type}</p>
+                                        <p>{pet.weight}</p>
+                                        <p>{pet.ageyear} years {pet.agemonth} months old, {pet.weight} lbs</p>
+                                    </Card>
+                                </List.Item>
+
+                            </div>
+                        )}
+                    />
+                </div>
+                <Button
+                    href="#"
+                    className="add-pet-btn"
+                    size="large"
+                >Add Pet</Button>
+            </div>
         );
     }
 }

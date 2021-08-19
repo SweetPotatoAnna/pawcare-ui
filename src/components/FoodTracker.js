@@ -1,114 +1,192 @@
 import React, {Component} from 'react';
 import {Input, Button, Table, Popconfirm, Form, message} from "antd";
 
-import   { EditableFormRow, EditableCell }  from "./EditableCell";
 import {TOKEN_KEY as userToken} from "../constants/constants";
 import axios from "axios";
 
+const { Search } = Input;
+const EditableContext = React.createContext();
+
+const EditableRow = ({ form, index, ...props }) => (
+    <EditableContext.Provider value={form}>
+        <tr {...props} />
+    </EditableContext.Provider>
+);
+
+const EditableFormRow = Form.create()(EditableRow);
+
+
+class EditableCell extends React.Component {
+    state = {
+        editing: false,
+    };
+
+
+    toggleEdit = () => {
+        const editing = !this.state.editing;
+        this.setState({ editing }, () => {
+            if (editing) {
+                this.input.focus();
+            }
+        });
+    };
+
+    save = e => {
+        const { record, handleSave } = this.props;
+        this.form.validateFields((error, values) => {
+            if (error && error[e.currentTarget.id]) {
+                return;
+            }
+            // this.toggleEdit();
+            handleSave({ ...record, ...values });
+        });
+    };
+
+    renderCell = form => {
+        this.form = form;
+        const { children, dataIndex, record, title } = this.props;
+        const { editing } = this.state;
+
+        return editing ? (
+            <Form.Item style={{ margin: 0 }}>
+                {form.getFieldDecorator(dataIndex, {
+                    rules: [
+                        {
+                            required: true,
+                            message: `${title} is required.`,
+                        },
+                    ],
+                    initialValue: record[dataIndex],
+                })(<Input ref={node => (this.input = node)}
+                          onPressEnter={this.save}
+                          onBlur={this.save}
+                          onChange={this.save}
+                />)}
+            </Form.Item>
+        ) : (
+            <div
+                className="editable-cell-value-wrap"
+                style={{ paddingRight: 2 }}
+                onClick={this.toggleEdit}
+            >
+                {children}
+            </div>
+        );
+    };
 
 
 
+
+    render() {
+        const {
+            editable,
+            dataIndex,
+            title,
+            record,
+            index,
+            handleSave,
+            children,
+            ...restProps
+        } = this.props;
+        return (
+            <td {...restProps}>
+                {editable ? (
+                    <EditableContext.Consumer>{this.renderCell}</EditableContext.Consumer>
+                ) : (
+                    children
+                )}
+            </td>
+        );
+    }
+}
 
 class FoodTracker extends Component {
     constructor(props) {
         super(props);
-
         this.columns = [
             {
-                title: 'Food name',
+                title: 'Food Name',
                 dataIndex: 'name',
-                width: '20%',
+                width: '30%',
                 editable: true,
+                className: "food-tracker-table-column"
             },
             {
                 title: 'Brand',
                 dataIndex: 'brand',
                 width: '15%',
-                editable: true
+                editable: true,
+                className: "food-tracker-table-column"
             },
             {
-                title: 'ingredient1',
+                title: 'Ingredient 1',
                 dataIndex: 'ingredient1',
-                editable: true
+                editable: true,
+                className: "food-tracker-table-column"
             },
             {
                 title: 'Ingredient 2',
                 dataIndex: 'ingredient2',
-                editable: true
+                editable: true,
+                className: "food-tracker-table-column"
             },
             {
                 title: 'Ingredient 3',
                 dataIndex: 'ingredient3',
-                editable: true
+                editable: true,
+                className: "food-tracker-table-column"
             },
             {
                 title: 'Ingredient 4',
                 dataIndex: 'ingredient4',
-                editable: true
+                editable: true,
+                className: "food-tracker-table-column"
             },
             {
                 title: 'Ingredient 5',
                 dataIndex: 'ingredient5',
-                editable: true
+                editable: true,
+                className: "food-tracker-table-column"
             },
             {
                 title: 'Ingredient 6',
                 dataIndex: 'ingredient6',
-                editable: true
+                editable: true,
+                className: "food-tracker-table-column"
             },
-            // {
-            //     title: 'operation',
-            //     dataIndex: 'operation',
-            //     render: (text, record) =>
-            //         this.state.dataSource.length >= 1 ? (
-            //             <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.key)}>
-            //                 <a>Delete</a>
-            //             </Popconfirm>
-            //         ) : null,
-            // },
         ];
 
         this.state = {
-            // dataSource: [
-            //     // {
-            //     //     key: '0',
-            //     //     name: 'Edward King 0',
-            //     //     age: '32',
-            //     //     address: 'London, Park Lane no. 0',
-            //     // },
-            //     // {
-            //     //     key: '1',
-            //     //     name: 'Edward King 1',
-            //     //     age: '32',
-            //     //     address: 'London, Park Lane no. 1',
-            //     // },
+            // foods: [
+            //     {
+            //         name: "Amazon Brand - Wag Dry Dog Food, No Added Grains",
+            //         brand: "XXX",
+            //         ingredient1: "XXX",
+            //         ingredient2: "XXX",
+            //         ingredient3: "XXX",
+            //         ingredient4: "XXX",
+            //         ingredient5: "XXX",
+            //         ingredient6: "XXX6"
+            //     }
+            // ],
+            // newFoodLine: [
+            //     {
+            //         name: "aaaa",
+            //         brand: "XXX",
+            //         ingredient1: "XXX",
+            //         ingredient2: "XXX",
+            //         ingredient3: "XXX",
+            //         ingredient4: "XXX",
+            //         ingredient5: "XXX",
+            //         ingredient6: "XXX6"
+            //     }
             // ],
             foods: [
-                {
-                    name: "Amazon Brand - Wag Dry Dog Food, No Added Grains",
-                    brand: "XXX",
-                    ingredient1: "XXX",
-                    ingredient2: "XXX",
-                    ingredient3: "XXX",
-                    ingredient4: "XXX",
-                    ingredient5: "XXX",
-                    ingredient6: "XXX6"
-                }
             ],
-            newFoodLine: [
-                {
-                    name: "aaaa",
-                    brand: "XXX",
-                    ingredient1: "XXX",
-                    ingredient2: "XXX",
-                    ingredient3: "XXX",
-                    ingredient4: "XXX",
-                    ingredient5: "XXX",
-                    ingredient6: "XXX6"
-                }
-            ],
-            count: 1,
-            editingStatus: false
+            count: 0,
+            testEditing: false,
+            // editingStatus: false
+            editingKey: '',
         };
     }
 
@@ -133,12 +211,10 @@ class FoodTracker extends Component {
             foods: [...foods, newData],
             // count: count + 1,
         });
-        console.log(count);
     };
 
     handleSave = row => {
         const newData = [...this.state.foods];
-        // const index = newData.findIndex(item => row.key === item.key);
         const index = newData.length - 1;
         const item = newData[index];
         newData.splice(index, 1, {
@@ -146,13 +222,12 @@ class FoodTracker extends Component {
             ...row,
         });
         this.setState({ foods: newData });
-        console.log(this.state.foods);
     };
 
     uploadFood = () => {
         const {foods, count} = this.state;
         const optUploadFood = {
-            url: "http://base_url/uploadfood",
+            url: `http://base_url/uploadfood`,
             method: "POST",
             headers:
                 {
@@ -207,22 +282,9 @@ class FoodTracker extends Component {
             });
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-    }
-
     render() {
-
-
         const { foods } = this.state;
-
-        const setEditingStatus = editing => {
-            const { editingStatus } = this.state;
-            this.setState({
-                editingStatus: editing
-            })
-        }
         const components = {
-
             body: {
                 row: EditableFormRow,
                 cell: EditableCell,
@@ -234,7 +296,7 @@ class FoodTracker extends Component {
             }
             return {
                 ...col,
-                onCell: record => ({
+                onCell: (record, rowIndex) => ({
                     record,
                     editable: col.editable,
                     dataIndex: col.dataIndex,
@@ -244,57 +306,51 @@ class FoodTracker extends Component {
             };
         });
 
+
         const addOrSave = () => {
             const {count, foods}=this.state;
-            const { editing } = this.state.editingStatus;
 
             if (foods.length === count) {
                 return (
-                    <Button onClick={this.handleAdd} style={{marginBottom: 16}}>
-                        Add food
+                    <Button onClick={this.handleAdd} style={{marginBottom: 16}} size='large'>
+                        Add Food
                     </Button>
                 )
-            } else if (editing === true) {
-                return (
-                    <Button onClick={this.uploadFood} type="primary" style={{marginBottom: 16}} disabled>
-                        Save
-                    </Button>
-                )
-
             } else {
                 return (
-                    <Button onClick={this.uploadFood} type="primary" style={{marginBottom: 16}} disabled>
+                    <Button onClick={this.uploadFood} type="primary" style={{marginBottom: 16}} size='large'>
                         Save
                     </Button>
                 )
 
             }
-
-
         }
 
         return (
             <div className="food-tracker">
-                <h1>Food Tracker</h1>
+                <h1 className="food-tracker-title">Food Tracker</h1>
                 <div className="add-food-bar">
-                    <div>
-                        <Input placeholder="Please input URL (function is developing)" className='add-food-bar-input-box' disabled={true}/>
-                    </div>
-                    <div>
-                        <Button type="primary" className='add-food-bar-btn'>Confirm</Button>
-                    </div>
+                    <Search
+                        className='add-food-bar-input-box'
+                        placeholder="Please input URL (function is developing)"
+                        disabled={true}
+                        enterButton="Confirm"
+                        size="large"
+                    />
+                </div>
+                <div>
+                    <Table
+                        className="food-tracker-table"
+                        components={components}
+                        rowClassName={() => 'editable-row'}
+                        bordered
+                        dataSource={ foods }
+                        columns={columns}
+                        pagination={false}
+                    />
                 </div>
 
-                <EditableCell setEditingStatus={setEditingStatus} />
-                <Table
-                    components={components}
-                    rowClassName={() => 'editable-row'}
-                    bordered
-                    dataSource={ foods }
-                    columns={columns}
-                    pagination={false}
-                />
-                <div>{addOrSave()}</div>
+                <div className="add-save-btn">{addOrSave()}</div>
 
             </div>
         );
@@ -302,29 +358,3 @@ class FoodTracker extends Component {
 }
 
 export default FoodTracker;
-
-
-
-// function isValidHttpUrl(string) {
-//     let url;
-//
-//     try {
-//         url = new URL(string);
-//     } catch (_) {
-//         return false;
-//     }
-//
-//     return url.protocol === "http:" || url.protocol === "https:";
-// }
-
-
-// {/*{*/}
-// {/*    foods.length === count ?*/}
-// {/*    <Button onClick={this.handleAdd} style={{marginBottom: 16}}>*/}
-// {/*        Add food*/}
-// {/*    </Button>*/}
-// {/*        :*/}
-// {/*        <Button onClick={this.uploadFood} type="primary" style={{marginBottom: 16}}>*/}
-// {/*            Save*/}
-// {/*        </Button>*/}
-// {/*}*/}

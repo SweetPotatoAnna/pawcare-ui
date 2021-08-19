@@ -1,1 +1,23 @@
+.myProfile {
+    width: 70%;
+    span: 16;
+    margin: 0 auto;
+}
 
+.title {
+    font-size: 40px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.my-pets-title {
+    font-size: 25px;
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-bottom: 10px;
+}
+
+.add-pet-btn {
+    margin-top: 20px;
+    float: right;
+}
