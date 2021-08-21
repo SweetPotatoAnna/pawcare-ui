@@ -4,6 +4,7 @@ function AllergenAnalysis(props) {
     return (
         <div>
             AllergenAnalysis test
+            hello!
         </div>
     );
 }
