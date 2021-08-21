@@ -1,102 +1,99 @@
 import React from 'react';
 import {Link} from 'react-router-dom'
 
-import {Form, Input, Icon, Button, message} from "antd";
+import {Form, Input, Button, message} from "antd";
 import {BASE_URL} from '../constants/constants';
 import axios from 'axios'
+import { SIGN_UP_PATH } from '../constants/paths';
 
 
-function SignIn(props) {
+function SignInForm(props) {
 
     const {signedInSuccess} = props;
 
-    const onFinish = values => {
+    const handleSubmit = e => {
+        e.preventDefault();
+        props.form.validateFieldsAndScroll((err, values) => {
+            if (!err) {
+                const {email, password} = values;
 
-        const {email, password} = values;
+                const opt = {
+                    method: "post",
+                    url: `${BASE_URL}/signin`,
+                    data: {
+                        email: email,
+                        password: password
+                    },
 
-        const opt = {
-            method: "post",
-            url: `${BASE_URL}/signin`,
-            data: {
-                email: email,
-                password: password
-            },
-
-            headers: {'content-type': 'application/json'}
+                    headers: {'content-type': 'application/json'}
 
 
-        };
+                };
 
-        axios(opt).then(
-            res => {
-                if (res.status === 200) {
-                    message.success('Sign in succeed!');
-                    signedInSuccess(res.data);
+                axios(opt).then(
+                    res => {
+                        if (res.status === 200) {
+                            message.success('Sign in succeed!');
+                            signedInSuccess(res.data);
+                        }
+                    }
+                ).catch(
+                    err => {
+                        console.log('sign in failed: ', err.message);
+                        message.error('Sign in failed!');
 
-                }
+                    }
+                )
             }
-        ).catch(
-            err => {
-                console.log('sign in failed: ', err.message);
-                message.error('Sign in failed!');
+        });
+    };
 
-            }
-        )
-
-    }
-
-
+    const {getFieldDecorator} = props.form;
     return (
-
         <div className="signin">
-            <p className="signin-title">Sign In</p>
-
-            <Form name="normal_login" className="login-form" onFinish={onFinish}>
+            <h2 className="signin-title">Sign In</h2>
+            <Form name="normal_login" className="login-form" onSubmit={handleSubmit}>
                 <Form.Item
-                    name="email"
-                    rules={[
-                        {
-                            required: true,
-                            message: "Please input your email!"
-                        }
-                    ]}
+                    label="Email"
+                    labelAlign="left"
                 >
-                    <Input
-                        prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                        placeholder="Email"
-                    />
+                     {getFieldDecorator('email', {
+                        rules: [
+
+                            {
+                                required: true,
+                                message: 'Please input your Email!'
+                            }
+                        ]
+                    })(<Input/>)}
                 </Form.Item>
                 <Form.Item
-                    name="password"
-                    rules={[
-                        {
-                            required: true,
-                            message: "Please input your Password!"
-                        }
-                    ]}
+                    label="Password"
+                    labelAlign="left"
                 >
-                    <Input
-                        type="password"
-                        prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                        placeholder="Password"
-                    />
-                </Form.Item>
+                    {getFieldDecorator('password', {
+                        rules: [
 
+                            {
+                                required: true,
+                                message: 'Please input your password!'
+                            }
+                        ]
+                    })(<Input/>)}
+                </Form.Item>
                 <Form.Item>
                     <Button type="primary" htmlType="submit" className="login-form-button">
                         Sign in
                     </Button>
-                    New user? <Link to="/signUp"> Sign up now.</Link>
+                    New user? <Link to={SIGN_UP_PATH}> Sign up now.</Link>
                 </Form.Item>
             </Form>
-
-
         </div>
-
-
     );
 
 
 }
+
+const SignIn = Form.create()(SignInForm);
 
 export default SignIn;
