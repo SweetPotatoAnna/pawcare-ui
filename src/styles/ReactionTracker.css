@@ -1,0 +1,44 @@
+
+.reaction-Tracker{
+    position: absolute;
+    margin-top: 100px;
+    margin-left: 400px;
+    width: 1000px;
+    height: 700px;
+    border: 1px solid blue;
+    box-sizing: border-box;
+
+}
+
+
+.time-selection{
+    margin-left: 20px;
+    position: absolute;
+    left: 0px;
+
+}
+
+.pick-selection{
+    margin: auto;
+    position: absolute;
+    left: 0px;
+}
+
+.pick-food{
+    margin-left: 20px;
+}
+
+.pick-coco{
+    margin-left: 20px;
+}
+
+.Search-button{
+    margin-left: 20px;
+
+}
+
+.result-table{
+    margin-left: 20px;
+    margin-right: 20px;
+
+}

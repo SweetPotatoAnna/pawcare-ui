@@ -3,6 +3,12 @@ import {Form, Button, Input, message} from 'antd';
 import axios from 'axios';
 import {BASE_URL} from '../constants/constants';
 import {Link} from 'react-router-dom'
+
+
+class SignUpForm extends Component {
+
+
+
 import { SIGN_IN_PATH } from '../constants/paths';
 
 
@@ -35,11 +41,15 @@ class SignUpForm extends Component {
                     res => {
                         if (res.status === 200) {
                             message.success('Sign up succeed!');
+                            this.props.history.push('/signIn');
                             this.props.history.push(SIGN_IN_PATH);
+
                         }
                     }
                 ).catch(
                     err => {
+                        console.log('sign up failed: ', err.message);
+                        message.error('Sign up failed!');
                         message.error('Sign up failed!');
                     }
                 )
@@ -96,6 +106,14 @@ class SignUpForm extends Component {
 
 
         const {getFieldDecorator} = this.props.form;
+
+        return (
+
+
+            <div className="signup">
+                <p className="signup-title">
+                    Sign Up
+                </p>
         return (
             <div className="signup">
                 <h2 className="signup-title">
@@ -105,6 +123,7 @@ class SignUpForm extends Component {
                       onSubmit={this.handleSubmit}
                       className="signup-form"
                 >
+
                     <Form.Item label="First name"
                                labelAlign="left"
                     >
@@ -132,6 +151,8 @@ class SignUpForm extends Component {
                             ]
                         })(<Input/>)}
                     </Form.Item>
+
+
                     <Form.Item label="Email"
                                labelAlign="left"
                     >
@@ -145,6 +166,7 @@ class SignUpForm extends Component {
                             ]
                         })(<Input/>)}
                     </Form.Item>
+
                     <Form.Item label="Password"
                                hasFeedback
                                labelAlign="left"
@@ -161,6 +183,7 @@ class SignUpForm extends Component {
                             ]
                         })(<Input.Password/>)}
                     </Form.Item>
+
                     <Form.Item label="Confirm Password"
                                hasFeedback
                                labelAlign="left"
@@ -181,6 +204,15 @@ class SignUpForm extends Component {
                         <Button type="primary" htmlType="submit" className="signup-btn">
                             Sign Up
                         </Button>
+                        Already have an account? <Link to="/signIn"> Sign in now.</Link>
+
+                    </Form.Item>
+
+                </Form>
+
+
+            </div>
+
                         Already have an account? <Link to={SIGN_IN_PATH}> Sign in now.</Link>
 
                     </Form.Item>

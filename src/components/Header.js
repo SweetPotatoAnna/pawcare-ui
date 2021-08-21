@@ -11,7 +11,7 @@ function Header(props) {
         <header className='navbar'>
             <img className='navbar-logo' src={pawcareLogo} alt='PawCare Logo' />
             {
-                signedIn && 
+                signedIn &&
                 <>
                     <Button className='navbar-nav' type="text" onClick={()=> history.push(urlPaths.FOOD_TRACKER_PATH)}>Food Track</Button>
                     <Button className='navbar-nav' type="text" onClick={()=> history.push(urlPaths.REACTION_TRACKER_PATH)}>Reaction Track</Button>

@@ -1,5 +1,8 @@
 @import "~antd/dist/antd.css";
 @import "./styles/App.css";
 @import "./styles/Header.css";
+@import "./styles/ReactionTracker.css";
+@import "./styles/Signin.css";
+@import "./styles/Signup.css";
 @import "./styles/SignIn.css";
 @import "./styles/SignUp.css";
