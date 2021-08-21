@@ -5,6 +5,7 @@ import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import dogIcon from '../assets/images/dog_icon.png';
 import catIcon from '../assets/images/cat_icon.png';
 
+
 function getBase64(img, callback) {
     const reader = new FileReader();
     reader.addEventListener('load', () => callback(reader.result));
@@ -28,6 +29,7 @@ class AddPet extends Component {
         displayModal: false,
         loading: false
     }
+
 
     render() {
         const {displayModal} = this.state;
@@ -69,7 +71,9 @@ class AddPet extends Component {
                           onFinish={this.onFinish}
                     >
 
-                        <Form.Item label="Pet type">
+                        <Form.Item
+                            name="pet_type"
+                            label="Pet type">
                             <Radio.Group buttonStyle="solid">
                                 <Radio.Button value="Dog" className='pet-button'>
                                     <img className='pet-icon' src={dogIcon} alt='dog Icon' />
@@ -87,8 +91,9 @@ class AddPet extends Component {
                             name="pet_name"
                             label="Name"
                         >
-                            <Input />
+                            <Input className='name-input'/>
                         </Form.Item>
+
                         <Form.Item
                             label="Weight(lbs)"
                             rules={[
@@ -103,6 +108,8 @@ class AddPet extends Component {
                         </Form.Item>
 
                         <Form.Item
+                            name="pet_year_age"
+                            className="age"
                             label="Age(Yr.)"
                             rules={[
                                 {
@@ -116,6 +123,8 @@ class AddPet extends Component {
                         </Form.Item>
 
                         <Form.Item
+                            name="pet_month_age"
+                            className="age"
                             label="Age(Mo.)"
                             rules={[
                                 {
@@ -128,12 +137,15 @@ class AddPet extends Component {
                             <InputNumber />
                         </Form.Item>
 
-                        <Form.Item label="Sex">
+                        <Form.Item
+                            name="pet_sex"
+                            label="Sex">
                             <Radio.Group buttonStyle="solid">
                                 <Radio.Button value="Male">Male</Radio.Button>
                                 <Radio.Button value="Female">Female</Radio.Button>
                             </Radio.Group>
                         </Form.Item>
+
                         <Form.Item
                             name="pet_breed"
                             label="Breed"

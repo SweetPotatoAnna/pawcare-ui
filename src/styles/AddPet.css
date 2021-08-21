@@ -2,12 +2,16 @@
     height: 20px;
 }
 
-.pet-button {
-    width: 200px;
+.name-input {
+    width: 150px;
 }
 
 .upload-photo {
     width: 150px;
     height: 150px;
     margin: 0 auto;
+}
+
+.age {
+    float: left;
 }
