@@ -1,0 +1,18 @@
+.login-form {
+    width: 300px;
+    margin: 10px auto auto auto;
+}
+
+.signin{
+    align-content: center;
+}
+
+.login-form-button {
+    width: 100%;
+}
+
+.signin-title{
+    margin-top: 100px;
+    font-weight: bold;
+    text-align: center;
+}
