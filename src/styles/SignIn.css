@@ -3,20 +3,16 @@
     margin: 10px auto auto auto;
 }
 
-.login-form-button {
-    width: 100%;
-
+.signin{
+    align-content: center;
 }
 
-.signin{
-
-    align-content: center;
-
+.login-form-button {
+    width: 100%;
 }
 
 .signin-title{
     margin-top: 100px;
-    font-size: x-large;
     font-weight: bold;
-
+    text-align: center;
 }
