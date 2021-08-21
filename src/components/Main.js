@@ -7,6 +7,10 @@ import SignIn from './SignIn';
 import ReactionTracker from "./ReactionTracker";
 
 
+import SignUp from './SignUp';
+import SignIn from './SignIn';
+import MyProfile from "./MyProfile";
+
 function Main(props) {
     const { signedIn, signedInSuccess } = props;
 
@@ -24,6 +28,7 @@ function Main(props) {
 
     const showReactionTracker = () => {
         return signedIn ? <ReactionTracker /> : <Redirect to={urlPaths.SIGN_IN_PATH} />;
+        return signedIn ? <MyProfile /> : <Redirect to={urlPaths.SIGN_IN_PATH} />;
     };
 
     return (
