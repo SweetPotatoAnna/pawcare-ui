@@ -9,3 +9,4 @@
 * Haixiang Zhang
 * Jingyuan Peng
 * Hanbo Huang
+* Fu Guo

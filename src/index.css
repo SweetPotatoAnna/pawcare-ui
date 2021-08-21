@@ -1,6 +1,7 @@
 @import "~antd/dist/antd.css";
 @import "./styles/App.css";
 @import "./styles/Header.css";
+@import "./styles/ReactionTracker.css";
 @import "./styles/AddPet.css";
 @import "./styles/SignIn.css";
 @import "./styles/SignUp.css";

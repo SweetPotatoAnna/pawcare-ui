@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-
 import {TOKEN_KEY} from '../constants/constants';
 import Header from './Header';
 import Main from './Main';
@@ -28,6 +27,7 @@ class App extends Component {
             </div>
         );
     }
+
 }
 
 export default App;

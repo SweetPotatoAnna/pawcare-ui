@@ -2,6 +2,10 @@ import React from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 
 import * as urlPaths from '../constants/paths';
+import SignUp from './SignUp';
+import SignIn from './SignIn';
+import ReactionTracker from "./ReactionTracker";
+
 
 import SignUp from './SignUp';
 import SignIn from './SignIn';
@@ -12,14 +16,20 @@ function Main(props) {
 
     const showSignIn = () => {
         return signedIn ? (
-          <Redirect to={urlPaths.MY_PROFILE_PATH}/>
+            <Redirect to={urlPaths.MY_PROFILE_PATH}/>
         ) : (
             <SignIn signedInSuccess={signedInSuccess}/>
         );
     };
 
     const showMyProfile = () => {
+
         return signedIn ? <MyProfile /> : <Redirect to={urlPaths.SIGN_IN_PATH} />;
+    };
+
+    
+    const showReactionTracker = () => {
+        return signedIn ? <ReactionTracker /> : <Redirect to={urlPaths.SIGN_IN_PATH} />;
     };
 
     return (
@@ -31,7 +41,7 @@ function Main(props) {
 
 
                 <Route path={urlPaths.FOOD_TRACKER_PATH}>foodTrancker</Route>
-                <Route path={urlPaths.REACTION_TRACKER_PATH}>reactionTracker</Route>
+                <Route path={urlPaths.REACTION_TRACKER_PATH}render={showReactionTracker}/>
                 <Route path={urlPaths.ALLERGEN_ANALYSIS_PATH}>allergenAnalysis</Route>
                 <Route path={urlPaths.MY_PROFILE_PATH} render={showMyProfile} />
             </Switch>
