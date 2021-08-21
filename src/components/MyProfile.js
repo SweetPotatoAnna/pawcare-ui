@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { Card, List, Descriptions, Avatar, Button, message } from 'antd';
 import axios from "axios";
+import AddPet from "./AddPet";
 
 import {TOKEN_KEY as userToken} from "../constants/constants";
 import {Redirect} from "react-router-dom";
@@ -132,11 +133,7 @@ class MyProfile extends Component {
                             )}
                         />
                     </div>
-                    <Button
-                        href="#"
-                        className="add-pet-btn"
-                        size="large"
-                    >Add Pet</Button>
+                    <AddPet/>
                 </div>
             </>
         );
