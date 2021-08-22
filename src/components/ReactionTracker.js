@@ -1,8 +1,10 @@
-import { message } from 'antd';
 import React, { Component } from 'react';
 import axios from "axios";
+import { Button, DatePicker, Select, message } from 'antd';
 
 import {BASE_URL, TOKEN_KEY} from "../constants/constants";
+
+const { Option } = Select;
 
 class ReactionTracker extends Component {
     constructor() {
@@ -69,8 +71,8 @@ class ReactionTracker extends Component {
 
     uploadReaction = () => {
         const opt = {
-            method: "get",
-            url: `${BASE_URL}/uploadfood`,
+            method: "post",
+            url: `${BASE_URL}/uploadpetreaction`,
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem(TOKEN_KEY)}`,
                 'content-type': 'application/json'
@@ -84,7 +86,7 @@ class ReactionTracker extends Component {
                     // send another request to get state.reactions
                     // or update state.reactions
                     this.setState((prevState, _) => ({ // update state.reactions
-                        reactions: [...prevState.reactions, prevState.newRaction],
+                        reactions: prevState.reactions.length === 0 ? [prevState.newRaction] : [...prevState.reactions, prevState.newRaction],
                         newRaction: {
                             reaction_date:"",
                             food_name: "",
@@ -93,8 +95,8 @@ class ReactionTracker extends Component {
                     }))
                 }
             }
-        ).catch(err => {
-
+        ).catch(() => {
+            message.error("Failed to save, please try again!")
         })
     };
 
@@ -105,13 +107,72 @@ class ReactionTracker extends Component {
         this.fetchReactions();
     }
 
+    handleSelectedDateChange = (_, dateString) => {
+        this.setState((prevState, _) => ({
+            newRaction: {
+                ...prevState.newRaction,
+                reaction_date: dateString         
+            }
+        }))
+    }
+
+    handleSelectedFoodChange = value => {
+        this.setState((prevState, _) => ({
+            newRaction: {
+                ...prevState.newRaction,
+                food_name: value         
+            }
+        }))
+    }
+
+    handleSelectedReactionChange = value => {
+        this.setState((prevState, _) => ({
+            newRaction: {
+                ...prevState.newRaction,
+                reaction_name: value         
+            }
+        }))
+    }
+
+    handleSaveReactionClick = () => {
+        this.uploadReaction();
+    }
+
     render() {
+        const { foodNames, reactionNames } = this.state;
         return (
             // use state.foodNames and state.reactionNames generate selectors
             // when user select selector(time, food, reactions), update state newReaction
             // when user click save, send request to upload state.newReaction and, and send another request to get state.reactions
             <div>
-                reations
+                <DatePicker onChange={this.handleSelectedDateChange} />
+                <Select 
+                    placeholder="Select a food" 
+                    style={{ width: 120 }} 
+                    onChange={this.handleSelectedFoodChange}
+                >
+                    {
+                        foodNames.map(food => 
+                            <Option key={food.name} value={food.name}>
+                                {food.name}
+                            </Option>
+                        )
+                    }
+                </Select>
+                <Select mode="multiple"
+                    placeholder="Select a reaction" 
+                    style={{ width: 120 }} 
+                    onChange={this.handleSelectedReactionChange}
+                >
+                    {
+                        reactionNames.map(reaction => 
+                            <Option key={reaction.reaction_name} value={reaction.reaction_name}>
+                                {reaction.reaction_name}
+                            </Option>
+                        )
+                    }
+                </Select>
+                <Button type="primary" onClick={this.handleSaveReactionClick}>Save</Button>
             </div>
         );
     }
