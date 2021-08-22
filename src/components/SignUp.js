@@ -98,9 +98,7 @@ class SignUpForm extends Component {
         const {getFieldDecorator} = this.props.form;
         return (
             <div className="signup">
-                <h2 className="signup-title">
-                    Sign Up
-                </h2>
+                <h1 className="signup-title page-title"> Sign Up </h1>
                 <Form {...formItemLayout}
                       onSubmit={this.handleSubmit}
                       className="signup-form"

@@ -39,9 +39,7 @@ function SignInForm(props) {
                     }
                 ).catch(
                     err => {
-                        console.log('sign in failed: ', err.message);
                         message.error('Sign in failed!');
-
                     }
                 )
             }
@@ -51,7 +49,7 @@ function SignInForm(props) {
     const {getFieldDecorator} = props.form;
     return (
         <div className="signin">
-            <h2 className="signin-title">Sign In</h2>
+            <h1 className="signin-title page-title">Sign In</h1>
             <Form name="normal_login" className="login-form" onSubmit={handleSubmit}>
                 <Form.Item
                     label="Email"
