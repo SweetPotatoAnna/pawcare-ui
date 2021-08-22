@@ -1,149 +1,126 @@
 import React, {Component} from 'react';
-import { Card, List, Descriptions, Avatar, Button, message } from 'antd';
+import { Card, List, Descriptions, Avatar } from 'antd';
 import axios from "axios";
+import AddPet from "./AddPet";
 
-import {TOKEN_KEY as userToken} from "../constants/constants";
-import {Redirect} from "react-router-dom";
-import * as urlPaths from "../constants/paths";
+import {BASE_URL, TOKEN_KEY} from "../constants/constants";
+import Spinner from '../commons/Spinner';
 
 class MyProfile extends Component {
 
     constructor() {
         super();
         this.state = {
-                userProfile:
-                    {
-                    // email: "johnsmith@e.com",
-                    // firstName:"John",
-                    // lastName:"Smith"
-                }
-            ,
-            pets:
-                [
-                //     {
-                //         name: "coco",
-                //         photo: "XXX",
-                //         type: "XXXX",
-                //         weight: "XXX",
-                //         ageyear: "XXXX",
-                //         agemonth: "XXXX",
-                //         sex: "XXX",
-                //         breed: "XXXX"
-                //     },
-                //     {
-                //         name: "XXXX",
-                //         photo: "XXX",
-                //         type: "XXXX",
-                //         weight: "XXX",
-                //         ageyear: "XXXX",
-                //         agemonth: "XXXX",
-                //         sex: "XXX",
-                //         breed: "XXXX"
-                //     }
-                ]
+            userProfile: // [],
+            {
+                firstname: "111",
+                lastname: "111",
+                email: "111"      
+            }, // remove when API is ready
+            pets: [],
+            isLoading: true
         }
     }
 
-
-    componentDidMount() {
-        let url = "http://base_url/getprofile";
-
+    fetchProfile = () => {
         const optGetProfile = {
             method: "GET",
-            url: url,
+            url: `${BASE_URL}/getprofile`,
             headers: {
-                Authorization: `Bearer ${ userToken }`
+                'Authorization': `Bearer ${ localStorage.getItem(TOKEN_KEY) }`
             }
         };
         axios(optGetProfile)
             .then((res) => {
+                console.log(res)
                 if (res.status === 200) {
                     this.setState({
-                        userProfile: res
+                        userProfile: res.data
                     })
                 }
             })
-            .catch((err) => {
-                message.error("Get user profile failed!");
-                // console.log("Get user profile failed: ", err.message);
-            });
+    };
 
+    fetchPets = () => {
         const optGetPets = {
             method: "GET",
-            url: "http://base_url/getpet",
+            url: `${BASE_URL}/getpets`,
             headers: {
-                Authorization: `Bearer ${userToken}`
+                Authorization: `Bearer ${localStorage.getItem(TOKEN_KEY)}`
             }
         }
+
         axios(optGetPets)
             .then((res) => {
+                console.log(res.data)
                 if (res.status === 200) {
                     this.setState({
-                        pets: res,
+                        pets: res.data ? res.data : [],
                     })
                     if (this.state.pets[0]) {
                         this.hadPets = true;
                     }
                 }
             })
-            .catch((err) => {
-                message.error("Get pets info failed!");
-                // console.log("Get pets info failed: ", err.message);
-            });
+    };
+
+    componentDidMount() {
+        this.setState({ isLoading: true });
+        this.fetchProfile();
+        this.fetchPets();
+        this.setState({ isLoading: false });
     }
 
-
-
     render() {
-        const { pets } = this.state;
-        const { email, firstName, lastName } = this.state.userProfile;
-
-        return (
-            <div className="myProfile">
-                <div style={{margin: '20px', }}>
+        const { pets, userProfile, isLoading } = this.state;
+        return isLoading
+            ? 
+            <Spinner />
+            :
+            (<>
+                <div style={{ padding: '20px 80px 20px 80px' }}>
+                    <h1 className='myProfile-title page-title'>My Profile</h1>
                     <Descriptions
-                        title={<h1 className="title">My Profile</h1>}
                         column={1}
                     >
-                        <Descriptions.Item label="Email Address">{email}</Descriptions.Item>
-                        <Descriptions.Item label="Full Name">{firstName} {lastName}</Descriptions.Item>
+                        <Descriptions.Item label="Email Address">{ userProfile.email }</Descriptions.Item>
+                        <Descriptions.Item label="Full Name">{ userProfile.firstname } { userProfile.lastname }</Descriptions.Item>
                     </Descriptions>
+                    <hr />
+
+                    <div>
+                        <h3 style={{ marginBottom: 16 }}>My Pets:</h3>
+                        <List
+                            // bordered
+                            grid={{ gutter: 16,      
+                                xs: 1,
+                                sm: 2,
+                                md: 4,
+                                lg: 4,
+                                xl: 6,
+                                xxl: 3, }}
+                            dataSource={pets}
+                            renderItem={pet => (
+                                <div>
+                                    <List.Item>
+                                        <Card title={pet.name} bordered={true} extra={<a href="#">Edit</a>}>
+                                            <Card.Meta className="PetPhoto"
+                                                       avatar={<Avatar src={pet.photo} />}
+                                                       description={pet.name}
+                                            />
+                                            <p>{pet.type}</p>
+                                            <p>{pet.weight}</p>
+                                            <p>{pet.ageyear} years {pet.agemonth} months old, {pet.weight} lbs</p>
+                                        </Card>
+                                    </List.Item>
+                                </div>
+                            )}
+                        />
+                    </div>
+                    <AddPet fetchPets={this.fetchPets}/>
                 </div>
-
-                <hr/>
-
-                <div>
-                    <h2 style={{marginBottom: 16}} className="my-pets-title">My Pets:</h2>
-                    <List
-                        className="my-pets-list"
-                        // bordered
-                        dataSource={pets}
-                        renderItem={pet => (
-                            <div>
-                                <List.Item>
-                                    <Card title={pet.name} bordered={true} extra={<a href="#">Edit</a>}
-                                          style={{width: '100%'}}>
-                                        <Card.Meta className="PetPhoto"
-                                                   avatar={<Avatar src={pet.photo}/>}
-                                                   description={pet.name}
-                                        />
-                                        <p>{pet.type}</p>
-                                        <p>{pet.weight}</p>
-                                        <p>{pet.ageyear} years {pet.agemonth} months old, {pet.weight} lbs</p>
-                                    </Card>
-                                </List.Item>
-
-                            </div>
-                        )}
-                    />
-                </div>
-                <Button
-                    href="#"
-                    className="add-pet-btn"
-                    size="large"
-                >Add Pet</Button>
-            </div>
-        );
+            </>)
+        ;
     }
 }
 

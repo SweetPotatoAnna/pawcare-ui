@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Input, Button, Table, Popconfirm, Form, message} from "antd";
 
-import {BASE_URL, TOKEN_KEY as userToken} from "../constants/constants";
+import {BASE_URL, TOKEN_KEY} from "../constants/constants";
 import axios from "axios";
 
 const { Search } = Input;
@@ -110,79 +110,65 @@ class FoodTracker extends Component {
                 dataIndex: 'name',
                 width: '30%',
                 editable: true,
-                className: "food-tracker-table-column"
+                className: "food-tracker-table-column",
+                key: "name"
             },
             {
                 title: 'Brand',
                 dataIndex: 'brand',
                 width: '15%',
                 editable: true,
-                className: "food-tracker-table-column"
+                className: "food-tracker-table-column",
+                key: "brand"
             },
             {
                 title: 'Ingredient 1',
                 dataIndex: 'ingredient1',
                 editable: true,
-                className: "food-tracker-table-column"
+                className: "food-tracker-table-column",
+                key: "ingredient1"
             },
             {
                 title: 'Ingredient 2',
                 dataIndex: 'ingredient2',
                 editable: true,
-                className: "food-tracker-table-column"
+                className: "food-tracker-table-column",
+                key: "ingredient2"
             },
             {
                 title: 'Ingredient 3',
                 dataIndex: 'ingredient3',
                 editable: true,
-                className: "food-tracker-table-column"
+                className: "food-tracker-table-column",
+                key: "ingredient3"
             },
             {
                 title: 'Ingredient 4',
                 dataIndex: 'ingredient4',
                 editable: true,
-                className: "food-tracker-table-column"
+                className: "food-tracker-table-column",
+                key: "ingredient4"
             },
             {
                 title: 'Ingredient 5',
                 dataIndex: 'ingredient5',
                 editable: true,
-                className: "food-tracker-table-column"
+                className: "food-tracker-table-column",
+                key: "ingredient5"
             },
             {
                 title: 'Ingredient 6',
                 dataIndex: 'ingredient6',
                 editable: true,
-                className: "food-tracker-table-column"
+                className: "food-tracker-table-column",
+                key: "ingredient6"
             },
         ];
 
         this.state = {
-            // foods: [
-            //     {
-            //         name: "Amazon Brand - Wag Dry Dog Food, No Added Grains",
-            //         brand: "XXX",
-            //         ingredient1: "XXX",
-            //         ingredient2: "XXX",
-            //         ingredient3: "XXX",
-            //         ingredient4: "XXX",
-            //         ingredient5: "XXX",
-            //         ingredient6: "XXX6"
-            //     }
-            // ],
-            // newFoodLine: [
-            //     {
-            //         name: "aaaa",
-            //         brand: "XXX",
-            //         ingredient1: "XXX",
-            //         ingredient2: "XXX",
-            //         ingredient3: "XXX",
-            //         ingredient4: "XXX",
-            //         ingredient5: "XXX",
-            //         ingredient6: "XXX6"
-            //     }
-            // ],
-            foods: [
+            foods: [{
+
+            }
             ],
             count: 0,
             testEditing: false,
@@ -222,7 +208,7 @@ class FoodTracker extends Component {
             ...row,
         });
         this.setState({ foods: newData });
-        console.log(this.state.foods);
+        // console.log(this.state.foods);
     };
 
     uploadFood = () => {
@@ -232,20 +218,8 @@ class FoodTracker extends Component {
             method: "POST",
             headers:
                 {
-                    Authorization: `Bearer ${userToken}`
+                    Authorization: `Bearer ${localStorage.getItem(TOKEN_KEY)}`
                 },
-            // body:
-            //     {
-            //         name: foods[this.state.count].name,
-            //         brand: foods[this.state.count].brand,
-            //         ingredient1: foods[this.state.count].ingredient1,
-            //         ingredient2: foods[this.state.count].ingredient2,
-            //         ingredient3: foods[this.state.count].ingredient3,
-            //         ingredient4: foods[this.state.count].ingredient4,
-            //         ingredient5: foods[this.state.count].ingredient5,
-            //         ingredient6: foods[this.state.count].ingredient6
-            //
-            //     }
             data:
                 {
                     "name": `${foods[this.state.count].name}`,
@@ -267,7 +241,7 @@ class FoodTracker extends Component {
             .catch((err) =>
                 {
                     message.error("Upload to server failed!")
-                    console.log("Upload to server failed: ", err.message)
+                    // console.log("Upload to server failed: ", err.message)
                 });
         this.setState(
             {
@@ -282,7 +256,7 @@ class FoodTracker extends Component {
             method: "GET",
             url: `${BASE_URL}/getfoods`,
             headers: {
-                Authorization: `Bearer ${userToken}`
+                Authorization: `Bearer ${localStorage.getItem(TOKEN_KEY)}`
             }
         }
         axios(optGetFoods)
@@ -292,11 +266,15 @@ class FoodTracker extends Component {
                         foods: res.data,
                         count: res.data.length
                     })
+                    for (var i = 0; i < this.state.count - 1; i++) {
+                        this.setState({
+                        })
+                    }
                 }
             })
             .catch((err) => {
                 message.error("Get food data failed");
-                console.log("Get food data failed: ", err.message)
+                // console.log("Get food data failed: ", err.message)
             });
     }
 
@@ -359,6 +337,7 @@ class FoodTracker extends Component {
                 <div>
                     <Table
                         className="food-tracker-table"
+                        rowKey="foodRowId"
                         components={components}
                         rowClassName={() => 'editable-row'}
                         bordered
