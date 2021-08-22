@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Form, Input, InputNumber, Modal, Button, Radio, Upload, message } from 'antd';
+import { Form, Input, InputNumber, Modal, Button, Radio, Upload, Select, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import axios from 'axios';
 
@@ -7,6 +7,7 @@ import dogIcon from '../assets/images/dog_icon.png';
 import catIcon from '../assets/images/cat_icon.png';
 import { BASE_URL, TOKEN_KEY } from '../constants/constants';
 
+const { Option } = Select;
 
 function getBase64(img, callback) {
     const reader = new FileReader();
@@ -22,13 +23,50 @@ class AddPet extends Component {
         petInfo: {
             name: "",
             photo: "",
-            type: "",
+            type: "Dog",
             weight: "",
             ageyear: "",
             agemonth: "",
             sex: "",
             breed: ""
+        },
+        breeds: {
+            dog: [],
+            cat: []
         }
+    }
+
+    fetchBreeds = (type) => {
+        const optGetProfile = {
+            method: "post", // need to change back to `get`, after backend fix their bug
+            url: `${BASE_URL}/getbreeds`,
+            headers: {
+                'Authorization': `Bearer ${ localStorage.getItem(TOKEN_KEY) }`,
+                'content-type': 'application/json'
+            },
+            data: { animal_specie: type }
+        };
+        return axios(optGetProfile)
+            .then((res) => {
+                if (res.status === 200) {
+                    return res.data ? res.data.map(obj => obj.breed_name) : [];
+                }
+            })
+    }
+
+    componentDidMount() {
+        this.fetchBreeds("Dog").then(res => 
+            this.setState((prevState, _) => {
+                const newBreeds = { ...prevState.breeds, dog: res, };
+                return { breeds: newBreeds };
+            })
+        );
+        this.fetchBreeds("Cat").then(res => 
+            this.setState((prevState, _) => {
+                const newBreeds = { ...prevState.breeds, cat: res, };
+                return { breeds: newBreeds };
+            })
+        );
     }
 
     handlePetTypeChange = e => {
@@ -85,9 +123,9 @@ class AddPet extends Component {
         });
     }
 
-    handleBreedChange = e => {
+    handleBreedChange = value => {
         this.setState((prevState, _) => {
-            const newPetInfo = {...prevState.petInfo, breed: e.target.value};
+            const newPetInfo = {...prevState.petInfo, breed: value};
             return {
                 petInfo: newPetInfo
             }
@@ -119,7 +157,7 @@ class AddPet extends Component {
 
     handleSubmit = e => {
         e.preventDefault();
-        const {petInfo} = this.state;
+        const { petInfo } = this.state;
         let formData = new FormData();
         formData.append("name", petInfo.name);
         formData.append("photo", petInfo.photo);
@@ -141,7 +179,6 @@ class AddPet extends Component {
         axios(optGetProfile)
             .then(res => {
                 if (res.status === 200) {
-                    this.props.fetchPets();
                     setTimeout(() => {
                         message.success(`Added ${petInfo.name} successfully!`);
                         this.setState({
@@ -158,8 +195,9 @@ class AddPet extends Component {
                             },
                             imageUrl: "",
                             resetForm: this.state === 0 ? 1 : 0
-                        })
-                    }, 1000);
+                        });
+                        this.props.fetchPets();
+                    }, 1500);
                 }
             })
             .catch(err => {
@@ -169,7 +207,7 @@ class AddPet extends Component {
     };
 
     render() {
-        const { displayModal, imageUrl, resetForm } = this.state;
+        const { displayModal, imageUrl, resetForm, breeds, petInfo } = this.state;
         const uploadButton = (
             <div>
                 <PlusOutlined />
@@ -208,7 +246,7 @@ class AddPet extends Component {
                         <Form.Item
                             name="pet_type"
                             label="Pet type">
-                            <Radio.Group buttonStyle="solid" onChange={this.handlePetTypeChange}>
+                            <Radio.Group defaultValue="Dog" buttonStyle="solid" onChange={this.handlePetTypeChange}>
                                 <Radio.Button value="Dog" className='pet-button'>
                                     <img className='pet-icon' src={dogIcon} alt='dog Icon' />
                                     Dog
@@ -283,7 +321,13 @@ class AddPet extends Component {
                             name="pet_breed"
                             label="Breed"
                         >
-                            <Input onChange={this.handleBreedChange}/>
+                            <Select defaultValue="" onChange={this.handleBreedChange}>
+                                {
+                                    breeds[petInfo.type.toLocaleLowerCase()].map((breed, index) => 
+                                        <Option key={index} value={index}>{breed}</Option>
+                                    ) // need to change back to `key={breed} value={index}`, after backend fix their bug
+                                }
+                            </Select>
                         </Form.Item>
 
                         <Form.Item>
