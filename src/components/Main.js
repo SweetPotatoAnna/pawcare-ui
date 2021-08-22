@@ -13,15 +13,19 @@ function Main(props) {
     const { signedIn, signedInSuccess } = props;
 
     const showSignIn = () => {
-        return signedIn ? (
-          <Redirect to={urlPaths.MY_PROFILE_PATH}/>
-        ) : (
-            <SignIn signedInSuccess={signedInSuccess}/>
-        );
+        return signedIn ? <Redirect to={urlPaths.MY_PROFILE_PATH}/> : <SignIn signedInSuccess={signedInSuccess}/>;
     };
 
     const showMyProfile = () => {
         return signedIn ? <MyProfile /> : <Redirect to={urlPaths.SIGN_IN_PATH} />;
+    };
+
+    const showReactionTracker = () => {
+        return signedIn ? <ReactionTracker /> : <Redirect to={urlPaths.SIGN_IN_PATH} />;
+    };
+
+    const showAllergenAnalysis = () => {
+        return signedIn ? <AllergenAnalysis /> : <Redirect to={urlPaths.SIGN_IN_PATH} />;
     };
 
     return (
@@ -31,10 +35,9 @@ function Main(props) {
                 <Route path={urlPaths.SIGN_IN_PATH} render={showSignIn} />
                 <Route path={urlPaths.SIGN_UP_PATH} component={SignUp}/>
 
-
                 <Route path={urlPaths.FOOD_TRACKER_PATH}>foodTrancker</Route>
-                <Route path={urlPaths.REACTION_TRACKER_PATH}><ReactionTracker /></Route>
-                <Route path={urlPaths.ALLERGEN_ANALYSIS_PATH}><AllergenAnalysis /></Route>
+                <Route path={urlPaths.REACTION_TRACKER_PATH} render={showReactionTracker} />
+                <Route path={urlPaths.ALLERGEN_ANALYSIS_PATH} render={showAllergenAnalysis} />
                 <Route path={urlPaths.MY_PROFILE_PATH} render={showMyProfile} />
             </Switch>
         </div>
