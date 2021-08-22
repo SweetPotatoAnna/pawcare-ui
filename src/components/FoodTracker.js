@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Input, Button, Table, Popconfirm, Form, message} from "antd";
 
-import {TOKEN_KEY as userToken} from "../constants/constants";
+import {BASE_URL, TOKEN_KEY as userToken} from "../constants/constants";
 import axios from "axios";
 
 const { Search } = Input;
@@ -32,6 +32,7 @@ class EditableCell extends React.Component {
     };
 
     save = e => {
+        console.log(e.target.value);
         const { record, handleSave } = this.props;
         this.form.validateFields((error, values) => {
             if (error && error[e.currentTarget.id]) {
@@ -185,7 +186,6 @@ class FoodTracker extends Component {
             ],
             count: 0,
             testEditing: false,
-            // editingStatus: false
             editingKey: '',
         };
     }
@@ -222,35 +222,52 @@ class FoodTracker extends Component {
             ...row,
         });
         this.setState({ foods: newData });
+        console.log(this.state.foods);
     };
 
     uploadFood = () => {
         const {foods, count} = this.state;
         const optUploadFood = {
-            url: `http://base_url/uploadfood`,
+            url: `${BASE_URL}/uploadfood`,
             method: "POST",
             headers:
                 {
-                    name: foods.name,
-                    brand: foods.brand,
-                    ingredient1: foods.ingredient1,
-                    ingredient2: foods.ingredient2,
-                    ingredient3: foods.ingredient3,
-                    ingredient4: foods.ingredient4,
-                    ingredient5: foods.ingredient5,
-                    ingredient6: foods.ingredient6
-
+                    Authorization: `Bearer ${userToken}`
+                },
+            // body:
+            //     {
+            //         name: foods[this.state.count].name,
+            //         brand: foods[this.state.count].brand,
+            //         ingredient1: foods[this.state.count].ingredient1,
+            //         ingredient2: foods[this.state.count].ingredient2,
+            //         ingredient3: foods[this.state.count].ingredient3,
+            //         ingredient4: foods[this.state.count].ingredient4,
+            //         ingredient5: foods[this.state.count].ingredient5,
+            //         ingredient6: foods[this.state.count].ingredient6
+            //
+            //     }
+            data:
+                {
+                    "name": `${foods[this.state.count].name}`,
+                    "brand": `${foods[this.state.count].brand}`,
+                    "ingredient1": `${foods[this.state.count].ingredient1}`,
+                    "ingredient2": `${foods[this.state.count].ingredient2}`,
+                    "ingredient3": `${foods[this.state.count].ingredient3}`,
+                    "ingredient4": `${foods[this.state.count].ingredient4}`,
+                    "ingredient5": `${foods[this.state.count].ingredient5}`,
+                    "ingredient6": `${foods[this.state.count].ingredient6}`
                 }
         };
         axios(optUploadFood)
             .then((res) => {
                 if (res.status === 200) {
-                    message.info("Save succeeded")
+                    message.success("Save succeeded")
                 }
             })
             .catch((err) =>
                 {
                     message.error("Upload to server failed!")
+                    console.log("Upload to server failed: ", err.message)
                 });
         this.setState(
             {
@@ -263,7 +280,7 @@ class FoodTracker extends Component {
     componentDidMount() {
         const optGetFoods = {
             method: "GET",
-            url: "http://base_url/getfoods",
+            url: `${BASE_URL}/getfoods`,
             headers: {
                 Authorization: `Bearer ${userToken}`
             }
@@ -272,13 +289,14 @@ class FoodTracker extends Component {
             .then((res) => {
                 if (res.status === 200) {
                     this.setState({
-                        foods: res,
-                        count: res.length
+                        foods: res.data,
+                        count: res.data.length
                     })
                 }
             })
             .catch((err) => {
                 message.error("Get food data failed");
+                console.log("Get food data failed: ", err.message)
             });
     }
 
@@ -319,7 +337,7 @@ class FoodTracker extends Component {
             } else {
                 return (
                     <Button onClick={this.uploadFood} type="primary" style={{marginBottom: 16}} size='large'>
-                        Save
+                        Save New-added Food
                     </Button>
                 )
 

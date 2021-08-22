@@ -1,1 +1,2 @@
-export const TOKEN_KEY = 'token';
+export const TOKEN_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5yb2dlcnNAZXhhbXBsZS5jb20iLCJleHAiOjE2Mjk2NzQ3MDh9.IYtU9G5LEslRNHea3-Pp9sjNCYmKGydinSgMRPBzDR0';
+export const BASE_URL = 'https://pawcare-323118.wl.r.appspot.com';

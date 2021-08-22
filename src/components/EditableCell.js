@@ -3,6 +3,8 @@ import { Input, Button, Table, Popconfirm, Form} from "antd";
 import axios from "axios";
 
 import {TOKEN_KEY as userToken} from "../constants/constants";
+import { IsEditingForm } from "./FoodTracker";
+
 
 const EditableContext = React.createContext();
 
@@ -28,8 +30,7 @@ export class EditableCell extends React.Component {
                 this.input.focus();
             }
         });
-        const setEditingStatus = this.props.setEditingStatus;
-        setEditingStatus(editing);
+        IsEditingForm = editing;
     };
 
     save = e => {

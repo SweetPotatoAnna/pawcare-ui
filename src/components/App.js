@@ -7,7 +7,8 @@ import Main from './Main';
 class App extends Component {
   state = {
     // signedIn: localStorage.getItem(TOKEN_KEY) ? true : false
-    signedIn: true,
+    signedIn: TOKEN_KEY ? true : false
+    // signedIn: true,
   };
 
   render() {

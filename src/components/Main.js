@@ -4,6 +4,7 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 import * as urlPaths from '../constants/paths';
 import MyProfile from "./MyProfile";
 import FoodTracker from "./FoodTracker";
+import {TOKEN_KEY} from "../constants/constants";
 
 function Main(props) {
     const { signedIn, signedInSuccess } = props;
