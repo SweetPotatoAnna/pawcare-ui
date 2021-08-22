@@ -323,7 +323,7 @@ class AddPet extends Component {
                         >
                             <Select defaultValue="" onChange={this.handleBreedChange}>
                                 {
-                                    breeds[petInfo.type.toLocaleLowerCase()].map((breed, index) => 
+                                    breeds && breeds[petInfo.type.toLocaleLowerCase()] && breeds[petInfo.type.toLocaleLowerCase()].map((breed, index) => 
                                         <Option key={index} value={index}>{breed}</Option>
                                     ) // need to change back to `key={breed} value={index}`, after backend fix their bug
                                 }
