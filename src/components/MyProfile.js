@@ -78,7 +78,7 @@ class MyProfile extends Component {
             <Spinner />
             :
             (<>
-                <div style={{ padding: '20px 80px 20px 80px' }}>
+                <div>
                     <h1 className='myProfile-title page-title'>My Profile</h1>
                     <Descriptions
                         column={1}

@@ -1,11 +1,38 @@
 import React, { Component } from 'react';
 import axios from "axios";
-import { Button, DatePicker, Select, message } from 'antd';
+import { Button, DatePicker, Select, Table, Tag, message } from 'antd';
 
 import {BASE_URL, TOKEN_KEY} from "../constants/constants";
 
 const { Option } = Select;
-
+const columns = [
+    {
+      title: 'Reaction Date',
+      dataIndex: 'reaction_date',
+      key: 'reaction_date',
+    },
+    {
+      title: 'Food Name',
+      dataIndex: 'food_name',
+      key: 'food_name',
+    },
+    {
+      title: 'Reaction Name',
+      dataIndex: 'reaction_name',
+      key: 'reaction_name',
+      render: name => {
+            let color = name.length > 5 ? 'geekblue' : 'green';
+            if (name === 'loser') {
+                color = 'volcano';
+            }
+            return (
+                <Tag color={color} key={name}>
+                {name}
+                </Tag>
+            );
+        },
+    }
+];
 class ReactionTracker extends Component {
     constructor() {
         super();
@@ -139,40 +166,59 @@ class ReactionTracker extends Component {
     }
 
     render() {
-        const { foodNames, reactionNames } = this.state;
+        const { foodNames, reactionNames, reactions } = this.state;
         return (
             // use state.foodNames and state.reactionNames generate selectors
             // when user select selector(time, food, reactions), update state newReaction
             // when user click save, send request to upload state.newReaction and, and send another request to get state.reactions
             <div>
-                <DatePicker onChange={this.handleSelectedDateChange} />
-                <Select 
-                    placeholder="Select a food" 
-                    style={{ width: 120 }} 
-                    onChange={this.handleSelectedFoodChange}
-                >
-                    {
-                        foodNames.map(food => 
-                            <Option key={food.name} value={food.name}>
-                                {food.name}
-                            </Option>
-                        )
-                    }
-                </Select>
-                <Select mode="multiple"
-                    placeholder="Select a reaction" 
-                    style={{ width: 120 }} 
-                    onChange={this.handleSelectedReactionChange}
-                >
-                    {
-                        reactionNames.map(reaction => 
-                            <Option key={reaction.reaction_name} value={reaction.reaction_name}>
-                                {reaction.reaction_name}
-                            </Option>
-                        )
-                    }
-                </Select>
-                <Button type="primary" onClick={this.handleSaveReactionClick}>Save</Button>
+                <h1 className='myProfile-title page-title'>Reaction Tracker</h1>
+                <div className="save-reaction">
+                    <DatePicker 
+                        className="save-reaction-selector" 
+                        style={{ width: '40%' }}
+                        onChange={this.handleSelectedDateChange} 
+                    />
+                    <Select 
+                        className="save-reaction-selector"
+                        style={{ width: '40%' }}
+                        placeholder="Select a food" 
+                        onChange={this.handleSelectedFoodChange}
+                    >
+                        {
+                            foodNames.map(food => 
+                                <Option key={food.name} value={food.name}>
+                                    {food.name}
+                                </Option>
+                            )
+                        }
+                    </Select>
+                    <Select mode="multiple"
+                        className="save-reaction-selector"
+                        style={{ width: '40%' }}
+                        placeholder="Select a reaction" 
+                        onChange={this.handleSelectedReactionChange}
+                    >
+                        {
+                            reactionNames.map(reaction => 
+                                <Option key={reaction.reaction_name} value={reaction.reaction_name}>
+                                    {reaction.reaction_name}
+                                </Option>
+                            )
+                        }
+                    </Select>
+                    <Button 
+                        className="save-reaction-selector"
+                        style={{ width: '20%' }}
+                        type="primary" 
+                        onClick={this.handleSaveReactionClick}
+                    >   
+                        Save
+                    </Button>
+                </div>
+                <div className="reaction-table">
+                    <Table columns={columns} dataSource={reactions} />
+                </div>
             </div>
         );
     }
