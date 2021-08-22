@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
 import { Form, Input, InputNumber, Modal, Button, Radio, Upload, message } from 'antd';
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
+import axios from 'axios';
 
 import dogIcon from '../assets/images/dog_icon.png';
 import catIcon from '../assets/images/cat_icon.png';
+import { BASE_URL, TOKEN_KEY } from '../constants/constants';
 
 
 function getBase64(img, callback) {
@@ -12,36 +14,170 @@ function getBase64(img, callback) {
     reader.readAsDataURL(img);
 }
 
-function beforeUpload(file) {
-    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-    if (!isJpgOrPng) {
-        message.error('You can only upload JPG/PNG file!');
-    }
-    const isLt2M = file.size / 1024 / 1024 < 2;
-    if (!isLt2M) {
-        message.error('Image must smaller than 2MB!');
-    }
-    return isJpgOrPng && isLt2M;
-}
-
 class AddPet extends Component {
     state = {
         displayModal: false,
-        loading: false
+        imageUrl: "",
+        resetForm: 1,
+        petInfo: {
+            name: "",
+            photo: "",
+            type: "",
+            weight: "",
+            ageyear: "",
+            agemonth: "",
+            sex: "",
+            breed: ""
+        }
     }
 
+    handlePetTypeChange = e => {
+        this.setState((prevState, _) => {
+            const newPetInfo = {...prevState.petInfo, type: e.target.value};
+            return {
+                petInfo: newPetInfo
+            }
+        });
+    }
+
+    handlePetSexChange = e => {
+        this.setState((prevState, _) => {
+            const newPetInfo = {...prevState.petInfo, sex: e.target.value};
+            return {
+                petInfo: newPetInfo
+            }
+        });
+    }
+
+    handleNameChange = e => {
+        this.setState((prevState, _) => {
+            const newPetInfo = {...prevState.petInfo, name: e.target.value};
+            return {
+                petInfo: newPetInfo
+            }
+        });
+    }
+
+    handleWeightChange = value => {
+        this.setState((prevState, _) => {
+            const newPetInfo = {...prevState.petInfo, weight: value};
+            return {
+                petInfo: newPetInfo
+            }
+        });
+    }
+
+    handleAgeYearChange = value => {
+        this.setState((prevState, _) => {
+            const newPetInfo = {...prevState.petInfo, ageyear: value};
+            return {
+                petInfo: newPetInfo
+            }
+        });
+    }
+
+    handleAgeMonthChange = value => {
+        this.setState((prevState, _) => {
+            const newPetInfo = {...prevState.petInfo, agemonth: value};
+            return {
+                petInfo: newPetInfo
+            }
+        });
+    }
+
+    handleBreedChange = e => {
+        this.setState((prevState, _) => {
+            const newPetInfo = {...prevState.petInfo, breed: e.target.value};
+            return {
+                petInfo: newPetInfo
+            }
+        });
+    }
+
+    handleUploadChange = ({ fileList }) => {
+        if (fileList && fileList.length > 0) {
+            this.setState((prevState, _) => {
+                const newPetInfo = {...prevState.petInfo, photo: fileList[fileList.length - 1].originFileObj };
+                return {
+                    petInfo: newPetInfo
+                }
+            });
+
+            getBase64(fileList[fileList.length - 1].originFileObj, imageUrl =>
+                this.setState({imageUrl}),
+            );
+        }
+    };
+
+    addPetClick = () => {
+        this.setState({displayModal: true})
+    }
+
+    handleCancel = () => {
+        this.setState({displayModal: false})
+    };
+
+    handleSubmit = e => {
+        e.preventDefault();
+        const {petInfo} = this.state;
+        let formData = new FormData();
+        formData.append("name", petInfo.name);
+        formData.append("photo", petInfo.photo);
+        formData.append("type", petInfo.type);
+        formData.append("weight", petInfo.weight);
+        formData.append("ageyear", petInfo.ageyear);
+        formData.append("agemonth", petInfo.agemonth);
+        formData.append("sex", petInfo.sex);
+        formData.append("breed", petInfo.breed);
+
+        const optGetProfile = {
+            method: "POST",
+            url: `${BASE_URL}/uploadpet`,
+            headers: {
+                'Authorization': `Bearer ${ localStorage.getItem(TOKEN_KEY) }`
+            },
+            data: formData
+        };
+        axios(optGetProfile)
+            .then(res => {
+                if (res.status === 200) {
+                    this.props.fetchPets();
+                    setTimeout(() => {
+                        message.success(`Added ${petInfo.name} successfully!`);
+                        this.setState({
+                            displayModal: false,
+                            petInfo: {
+                                name: "",
+                                photo: "",
+                                type: "",
+                                weight: "",
+                                ageyear: "",
+                                agemonth: "",
+                                sex: "",
+                                breed: ""
+                            },
+                            imageUrl: "",
+                            resetForm: this.state === 0 ? 1 : 0
+                        })
+                    }, 1000);
+                }
+            })
+            .catch(err => {
+                    message.error(`Failed to add ${petInfo.name}, please try again!`);
+                }
+            )
+    };
 
     render() {
-        const {displayModal} = this.state;
-        const { loading, imageUrl } = this.state;
+        const { displayModal, imageUrl, resetForm } = this.state;
         const uploadButton = (
             <div>
-                {loading ? <LoadingOutlined /> : <PlusOutlined />}
+                <PlusOutlined />
                 <div style={{ marginTop: 8 }}>Upload</div>
             </div>
         );
         return (
-            <div>
+            <div key={resetForm}>
                 <Button type="primary" onClick={this.addPetClick}>
                     Add Pet
                 </Button>
@@ -53,28 +189,26 @@ class AddPet extends Component {
                 >
 
                     <div className='upload-photo'>
-                        <h1>Edit Pet</h1>
                         <Upload
                             name="avatar"
                             listType="picture-card"
                             className="avatar-uploader"
                             showUploadList={false}
                             action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                            beforeUpload={beforeUpload}
-                            onChange={this.handleChange}
+                            beforeUpload={() => false}
+                            onChange={this.handleUploadChange}
                         >
                             {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
                         </Upload>
-                    </div>,
+                    </div>
 
                     <Form name="pet_information"
-                          onFinish={this.onFinish}
+                          onSubmit={this.handleSubmit}
                     >
-
                         <Form.Item
                             name="pet_type"
                             label="Pet type">
-                            <Radio.Group buttonStyle="solid">
+                            <Radio.Group buttonStyle="solid" onChange={this.handlePetTypeChange}>
                                 <Radio.Button value="Dog" className='pet-button'>
                                     <img className='pet-icon' src={dogIcon} alt='dog Icon' />
                                     Dog
@@ -86,12 +220,11 @@ class AddPet extends Component {
                             </Radio.Group>
                         </Form.Item>
 
-
                         <Form.Item
                             name="pet_name"
                             label="Name"
                         >
-                            <Input className='name-input'/>
+                            <Input className='name-input' onChange={this.handleNameChange}/>
                         </Form.Item>
 
                         <Form.Item
@@ -104,7 +237,7 @@ class AddPet extends Component {
                                 },
                             ]}
                         >
-                            <InputNumber />
+                            <InputNumber onChange={this.handleWeightChange}/>
                         </Form.Item>
 
                         <Form.Item
@@ -119,7 +252,7 @@ class AddPet extends Component {
                                 },
                             ]}
                         >
-                            <InputNumber />
+                            <InputNumber onChange={this.handleAgeYearChange}/>
                         </Form.Item>
 
                         <Form.Item
@@ -134,13 +267,13 @@ class AddPet extends Component {
                                 },
                             ]}
                         >
-                            <InputNumber />
+                            <InputNumber onChange={this.handleAgeMonthChange}/>
                         </Form.Item>
 
                         <Form.Item
                             name="pet_sex"
                             label="Sex">
-                            <Radio.Group buttonStyle="solid">
+                            <Radio.Group buttonStyle="solid" onChange={this.handlePetSexChange}>
                                 <Radio.Button value="Male">Male</Radio.Button>
                                 <Radio.Button value="Female">Female</Radio.Button>
                             </Radio.Group>
@@ -150,7 +283,7 @@ class AddPet extends Component {
                             name="pet_breed"
                             label="Breed"
                         >
-                            <Input />
+                            <Input onChange={this.handleBreedChange}/>
                         </Form.Item>
 
                         <Form.Item>
@@ -164,38 +297,6 @@ class AddPet extends Component {
             </div>
         );
     }
-
-
-
-    addPetClick = () => {
-        this.setState({displayModal: true})
-    }
-
-    handleCancel = () => {
-        this.setState({displayModal: false})
-    };
-
-    onFinish = (values) => {
-        console.log(values);
-    };
-
-    handleChange = info => {
-        if (info.file.status === 'uploading') {
-            this.setState({ loading: true });
-            return;
-        }
-        if (info.file.status === 'done') {
-            // Get this url from response in real world.
-            getBase64(info.file.originFileObj, imageUrl =>
-                this.setState({
-                    imageUrl,
-                    loading: false,
-                }),
-            );
-        }
-    };
-
-
 }
 
 export default AddPet;
