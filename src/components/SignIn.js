@@ -63,7 +63,7 @@ function SignInForm(props) {
                                 message: 'Please input your Email!'
                             }
                         ]
-                    })(<Input/>)}
+                    })(<Input />)}
                 </Form.Item>
                 <Form.Item
                     label="Password"
@@ -77,8 +77,10 @@ function SignInForm(props) {
                                 message: 'Please input your password!'
                             }
                         ]
-                    })(<Input/>)}
+                    })(<Input.Password />)}
                 </Form.Item>
+
+
                 <Form.Item>
                     <Button type="primary" htmlType="submit" className="login-form-button">
                         Sign in
