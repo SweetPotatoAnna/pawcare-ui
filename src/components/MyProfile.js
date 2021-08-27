@@ -5,18 +5,14 @@ import AddPet from "./AddPet";
 
 import {BASE_URL, TOKEN_KEY} from "../constants/constants";
 import Spinner from '../commons/Spinner';
+import EditPet from "./EditPet"
 
 class MyProfile extends Component {
 
     constructor() {
         super();
         this.state = {
-            userProfile: // [],
-            {
-                firstname: "111",
-                lastname: "111",
-                email: "111"      
-            }, // remove when API is ready
+            userProfile: {},
             pets: [],
             isLoading: true
         }
@@ -64,6 +60,15 @@ class MyProfile extends Component {
             })
     };
 
+    handleRerender = () => {
+        setTimeout(() => {
+                this.fetchPets();
+                this.forceUpdate();
+            },
+            250
+        )
+    }
+
     componentDidMount() {
         this.setState({ isLoading: true });
         this.fetchProfile();
@@ -74,7 +79,7 @@ class MyProfile extends Component {
     render() {
         const { pets, userProfile, isLoading } = this.state;
         return isLoading
-            ? 
+            ?
             <Spinner />
             :
             (<>
@@ -92,7 +97,7 @@ class MyProfile extends Component {
                         <h3 style={{ marginBottom: 16 }}>My Pets:</h3>
                         <List
                             // bordered
-                            grid={{ gutter: 16,      
+                            grid={{ gutter: 16,
                                 xs: 1,
                                 sm: 2,
                                 md: 4,
@@ -103,7 +108,7 @@ class MyProfile extends Component {
                             renderItem={pet => (
                                 <div>
                                     <List.Item>
-                                        <Card title={pet.name} bordered={true} extra={<a href="#">Edit</a>}>
+                                        <Card title={pet.name} bordered={true} extra={<EditPet fetchPets={this.fetchPets} pet={pet} handleRerender={this.handleRerender}/>}>
                                             <Card.Meta className="PetPhoto"
                                                        avatar={<Avatar src={pet.photo} />}
                                                        description={pet.name}
@@ -120,7 +125,7 @@ class MyProfile extends Component {
                     <AddPet fetchPets={this.fetchPets}/>
                 </div>
             </>)
-        ;
+            ;
     }
 }
 
