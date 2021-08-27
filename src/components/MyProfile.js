@@ -11,12 +11,7 @@ class MyProfile extends Component {
     constructor() {
         super();
         this.state = {
-            userProfile: // [],
-            {
-                firstname: "111",
-                lastname: "111",
-                email: "111"      
-            }, // remove when API is ready
+            userProfile: {},
             pets: [],
         }
     }
@@ -101,8 +96,8 @@ class MyProfile extends Component {
                                                     avatar={<Avatar src={pet.photo} />}
                                                     description={pet.name}
                                             />
-                                            <p>{pet.type}</p>
-                                            <p>{pet.weight}</p>
+                                            <p>{pet.pet}</p>
+                                            <p>{pet.breed}</p>
                                             <p>{pet.ageyear} years {pet.agemonth} months old, {pet.weight} lbs</p>
                                         </Card>
                                     </List.Item>
