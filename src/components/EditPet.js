@@ -22,7 +22,6 @@ class EditPet extends Component {
             imageUrl: "",
             resetForm: 1,
             petInfo: {},
-            petInfoNew: {},
             petName: "",
             displayUploadModal: false,
         }
@@ -33,7 +32,7 @@ class EditPet extends Component {
         this.setState((prevState, _) => {
             const newPetInfo = {...prevState.petInfo, type: e.target.value};
             return {
-                petInfoNew: newPetInfo
+                petInfo: newPetInfo
             }
         });
     }
@@ -42,7 +41,7 @@ class EditPet extends Component {
         this.setState((prevState, _) => {
             const newPetInfo = {...prevState.petInfo, sex: e.target.value};
             return {
-                petInfoNew: newPetInfo
+                petInfo: newPetInfo
             }
         });
     }
@@ -51,7 +50,7 @@ class EditPet extends Component {
         this.setState((prevState, _) => {
             const newPetInfo = {...prevState.petInfo, current_name: e.target.value};
             return {
-                petInfoNew: newPetInfo
+                petInfo: newPetInfo
             }
         });
     }
@@ -60,7 +59,7 @@ class EditPet extends Component {
         this.setState((prevState, _) => {
             const newPetInfo = {...prevState.petInfo, weight: value};
             return {
-                petInfoNew: newPetInfo
+                petInfo: newPetInfo
             }
         });
     }
@@ -69,7 +68,7 @@ class EditPet extends Component {
         this.setState((prevState, _) => {
             const newPetInfo = {...prevState.petInfo, ageyear: value};
             return {
-                petInfoNew: newPetInfo
+                petInfo: newPetInfo
             }
         });
     }
@@ -78,7 +77,7 @@ class EditPet extends Component {
         this.setState((prevState, _) => {
             const newPetInfo = {...prevState.petInfo, agemonth: value};
             return {
-                petInfoNew: newPetInfo
+                petInfo: newPetInfo
             }
         });
     }
@@ -87,7 +86,7 @@ class EditPet extends Component {
         this.setState((prevState, _) => {
             const newPetInfo = {...prevState.petInfo, breed: e.target.value};
             return {
-                petInfoNew: newPetInfo
+                petInfo: newPetInfo
             }
         });
     }
@@ -97,7 +96,7 @@ class EditPet extends Component {
             this.setState((prevState, _) => {
                 const newPetInfo = {...prevState.petInfo, photo: fileList[fileList.length - 1].originFileObj };
                 return {
-                    petInfoNew: newPetInfo
+                    petInfo: newPetInfo
                 }
             });
 
@@ -149,7 +148,6 @@ class EditPet extends Component {
         this.setState(
             {
                 petInfo: list,
-                petInfoNew: list,
                 imageUrl: this.props.pet.photo,
                 displayModal: true
             },
@@ -159,7 +157,6 @@ class EditPet extends Component {
     handleCancel = () => {
         this.setState({
             displayModal: false,
-            petInfoNew: this.state.petInfo,
             resetForm: this.state === 0 ? 1 : 0
         })
     };
@@ -180,17 +177,17 @@ class EditPet extends Component {
 
     handleSubmit = e => {
         e.preventDefault();
-        const {petInfoNew} = this.state;
+        const {petInfo} = this.state;
         let formData = new FormData();
-        formData.append("before_name", petInfoNew.before_name);
-        formData.append("current_name", petInfoNew.current_name);
-        formData.append("photo", petInfoNew.photo);
-        formData.append("type", petInfoNew.type);
-        formData.append("weight", petInfoNew.weight);
-        formData.append("ageyear", petInfoNew.ageyear);
-        formData.append("agemonth", petInfoNew.agemonth);
-        formData.append("sex", petInfoNew.sex);
-        formData.append("breed", petInfoNew.breed);
+        formData.append("before_name", petInfo.before_name);
+        formData.append("current_name", petInfo.current_name);
+        formData.append("photo", petInfo.photo);
+        formData.append("type", petInfo.type);
+        formData.append("weight", petInfo.weight);
+        formData.append("ageyear", petInfo.ageyear);
+        formData.append("agemonth", petInfo.agemonth);
+        formData.append("sex", petInfo.sex);
+        formData.append("breed", petInfo.breed);
 
         const optUpdateProfile = {
             method: "POST",
@@ -205,7 +202,7 @@ class EditPet extends Component {
             .then(res => {
                 if (res.status === 200) {
                     this.props.fetchPets();
-                    message.success(`${petInfoNew.current_name} Updated!`);
+                    message.success(`${petInfo.current_name} Updated!`);
                     this.setState({
                         displayModal: false,
                         resetForm: this.state === 0 ? 1 : 0
@@ -214,7 +211,7 @@ class EditPet extends Component {
                 }
             })
             .catch(err => {
-                    message.error(`Failed to update ${petInfoNew.current_name}, please try again!`);
+                    message.error(`Failed to update ${petInfo.current_name}, please try again!`);
                 }
             )
     };
@@ -223,7 +220,7 @@ class EditPet extends Component {
 
 
     render() {
-        const { displayModal, imageUrl, resetForm, petInfoNew, displayUploadModal } = this.state;
+        const { displayModal, imageUrl, resetForm, petInfo, displayUploadModal } = this.state;
         const { pet } = this.props;
         const uploadButton = (
             <div>
@@ -286,7 +283,7 @@ class EditPet extends Component {
                         <Form.Item
                             name="pet_type"
                             label="Pet type">
-                            <Radio.Group buttonStyle="solid" defaultValue={petInfoNew.type} onChange={this.handlePetTypeChange}>
+                            <Radio.Group buttonStyle="solid" defaultValue={petInfo.type} onChange={this.handlePetTypeChange}>
                                 <Radio.Button value="Dog" className='pet-button'>
                                     <img className='pet-icon' src={dogIcon} alt='dog Icon' />
                                     Dog
@@ -302,7 +299,7 @@ class EditPet extends Component {
                             name="pet_name"
                             label="Name"
                         >
-                            <Input className='name-input' defaultValue={petInfoNew.current_name} key={petInfoNew.current_name} onBlur={this.handleNameChange}/>
+                            <Input className='name-input' defaultValue={petInfo.current_name} key={petInfo.current_name} onBlur={this.handleNameChange}/>
                         </Form.Item>
 
                         <Form.Item
@@ -315,7 +312,7 @@ class EditPet extends Component {
                                 },
                             ]}
                         >
-                            <InputNumber defaultValue={petInfoNew.weight} onChange={this.handleWeightChange}/>
+                            <InputNumber defaultValue={petInfo.weight} onChange={this.handleWeightChange}/>
                         </Form.Item>
 
                         <Form.Item
@@ -330,7 +327,7 @@ class EditPet extends Component {
                                 },
                             ]}
                         >
-                            <InputNumber defaultValue={petInfoNew.ageyear} onChange={this.handleAgeYearChange}/>
+                            <InputNumber defaultValue={petInfo.ageyear} onChange={this.handleAgeYearChange}/>
                         </Form.Item>
 
                         <Form.Item
@@ -345,13 +342,13 @@ class EditPet extends Component {
                                 },
                             ]}
                         >
-                            <InputNumber defaultValue={petInfoNew.agemonth} onChange={this.handleAgeMonthChange}/>
+                            <InputNumber defaultValue={petInfo.agemonth} onChange={this.handleAgeMonthChange}/>
                         </Form.Item>
 
                         <Form.Item
                             name="pet_sex"
                             label="Sex">
-                            <Radio.Group buttonStyle="solid" defaultValue={petInfoNew.sex}  onChange={this.handlePetSexChange}>
+                            <Radio.Group buttonStyle="solid" defaultValue={petInfo.sex}  onChange={this.handlePetSexChange}>
                                 <Radio.Button value="Male">Male</Radio.Button>
                                 <Radio.Button value="Female">Female</Radio.Button>
                             </Radio.Group>
@@ -361,7 +358,7 @@ class EditPet extends Component {
                             name="pet_breed"
                             label="Breed"
                         >
-                            <Input defaultValue={petInfoNew.breed} key={petInfoNew.breed} onBlur={this.handleBreedChange}/>
+                            <Input defaultValue={petInfo.breed} key={petInfo.breed} onBlur={this.handleBreedChange}/>
                         </Form.Item>
 
                         <Form.Item>
