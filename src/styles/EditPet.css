@@ -13,10 +13,21 @@
 }
 
 .age {
-    display: inline-block;
+    float: left;
+}
+
+.edit-btn {
     margin-right: 10px;
 }
 
-.add-pet-btn {
-    float: right;
+.delete-btn {
+    color: crimson;
+}
+
+.pet-photo {
+    text-align: center;
+}
+
+.change-photo-text {
+    margin-top: 15px;
 }
