@@ -14,7 +14,6 @@ class MyProfile extends Component {
         this.state = {
             userProfile: {},
             pets: [],
-            isLoading: true
         }
     }
 
@@ -45,7 +44,6 @@ class MyProfile extends Component {
                 Authorization: `Bearer ${localStorage.getItem(TOKEN_KEY)}`
             }
         }
-
         axios(optGetPets)
             .then((res) => {
                 console.log(res.data)
@@ -70,19 +68,14 @@ class MyProfile extends Component {
     }
 
     componentDidMount() {
-        this.setState({ isLoading: true });
         this.fetchProfile();
         this.fetchPets();
-        this.setState({ isLoading: false });
     }
 
     render() {
         const { pets, userProfile, isLoading } = this.state;
-        return isLoading
-            ?
-            <Spinner />
-            :
-            (<>
+        return (
+            <>
                 <div>
                     <h1 className='myProfile-title page-title'>My Profile</h1>
                     <Descriptions
@@ -110,11 +103,11 @@ class MyProfile extends Component {
                                     <List.Item>
                                         <Card title={pet.name} bordered={true} extra={<EditPet fetchPets={this.fetchPets} pet={pet} handleRerender={this.handleRerender}/>}>
                                             <Card.Meta className="PetPhoto"
-                                                       avatar={<Avatar src={pet.photo} />}
-                                                       description={pet.name}
+                                                    avatar={<Avatar src={pet.photo} />}
+                                                    description={pet.name}
                                             />
-                                            <p>{pet.type}</p>
-                                            <p>{pet.weight}</p>
+                                            <p>{pet.pet}</p>
+                                            <p>{pet.breed}</p>
                                             <p>{pet.ageyear} years {pet.agemonth} months old, {pet.weight} lbs</p>
                                         </Card>
                                     </List.Item>
@@ -124,8 +117,9 @@ class MyProfile extends Component {
                     </div>
                     <AddPet fetchPets={this.fetchPets}/>
                 </div>
-            </>)
-            ;
+
+            </>
+        );
     }
 }
 

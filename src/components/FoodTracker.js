@@ -263,8 +263,8 @@ class FoodTracker extends Component {
             .then((res) => {
                 if (res.status === 200) {
                     this.setState({
-                        foods: res.data,
-                        count: res.data.length
+                        foods: res.data ? res.data : [],
+                        count: res.data ? res.data.length : 0
                     })
                     for (var i = 0; i < this.state.count - 1; i++) {
                         this.setState({
@@ -272,10 +272,6 @@ class FoodTracker extends Component {
                     }
                 }
             })
-            .catch((err) => {
-                message.error("Get food data failed");
-                // console.log("Get food data failed: ", err.message)
-            });
     }
 
     render() {
