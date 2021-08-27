@@ -15,3 +15,7 @@
 .age {
     float: left;
 }
+
+.add-pet-btn {
+    float: right;
+}

@@ -65,7 +65,7 @@ class MyProfile extends Component {
                 this.fetchPets();
                 this.forceUpdate();
             },
-            250
+            800
         )
     }
 
