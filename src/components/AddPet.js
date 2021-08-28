@@ -178,7 +178,7 @@ class AddPet extends Component {
         );
         return (
             <div key={resetForm}>
-                <Button type="primary" onClick={this.addPetClick}>
+                <Button className="add-pet-btn" type="primary" onClick={this.addPetClick}>
                     Add Pet
                 </Button>
                 <Modal title="Add Pet"

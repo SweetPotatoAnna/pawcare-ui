@@ -128,7 +128,6 @@ class EditPet extends Component {
             .catch((err) => {
                 message.error("failed to delete")
             })
-        this.props.fetchPets();
     }
 
     editPetClick = () => {
