@@ -13,8 +13,8 @@ function Header(props) {
             {
                 signedIn && 
                 <>
-                    <Button className='navbar-nav' type="text" onClick={()=> history.push(urlPaths.FOOD_TRACKER_PATH)}>Food Track</Button>
-                    <Button className='navbar-nav' type="text" onClick={()=> history.push(urlPaths.REACTION_TRACKER_PATH)}>Reaction Track</Button>
+                    <Button className='navbar-nav' type="text" onClick={()=> history.push(urlPaths.FOOD_TRACKER_PATH)}>Food Tracker</Button>
+                    <Button className='navbar-nav' type="text" onClick={()=> history.push(urlPaths.REACTION_TRACKER_PATH)}>Reaction Tracker</Button>
                     <Button className='navbar-nav' type="text" onClick={()=> history.push(urlPaths.ALLERGEN_ANALYSIS_PATH)}>Allergen Analysis</Button>
                     <Button className='navbar-nav' type="text" onClick={()=> history.push(urlPaths.MY_PROFILE_PATH)}>My Profile</Button>
                     <Button className='navbar-nav' type="text" onClick={signedOutSuccess}>Log Out</Button>

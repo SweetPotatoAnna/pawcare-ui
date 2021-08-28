@@ -10,7 +10,7 @@ class AllergenAnalysis extends React.Component {
 
     fetchAllergenAnalysis = () => {
         const optReactionNames = {
-            method: "post",
+            method: "get",
             url: `${BASE_URL}/getallergens`,
             headers: {
                 Authorization: `Bearer ${localStorage.getItem(TOKEN_KEY)}`
@@ -37,10 +37,10 @@ class AllergenAnalysis extends React.Component {
                 {
                     allergenAnalysis ? (
                         <>
-                            <p>Based on our analysis, Coco might have allergy or intolerance to the ingredients below.</p>
+                            <p>Based on our analysis, Coco might have allergy or intolerance to the ingredients below: </p>
                             <div>
                             {
-                                allergenAnalysis
+                                allergenAnalysis.join(", ")
                             }
                             </div> 
                         </>

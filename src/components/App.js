@@ -11,13 +11,13 @@ class App extends Component {
 
     render() {
         const signedInSuccess = (token) => {
-            this.setState({signedIn: true});
             localStorage.setItem(TOKEN_KEY, token); // improve by add a hash function.
+            this.setState({signedIn: true});
         }
 
         const signedOutSuccess = () => {
-            this.setState({signedIn: false});
             localStorage.removeItem(TOKEN_KEY);
+            this.setState({signedIn: false});
         }
 
         const {signedIn} = this.state;

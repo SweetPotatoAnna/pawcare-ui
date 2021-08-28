@@ -27,7 +27,7 @@ const columns = [
             }
             return (
                 <Tag color={color} key={name}>
-                {name}
+                {typeof(name) === "object" ? name.join(', ') : name}
                 </Tag>
             );
         },
@@ -59,7 +59,7 @@ class ReactionTracker extends Component {
         axios(optFoodNames).then(
             res => {
                 if (res.status === 200) {
-                    this.setState({ foodNames: res.data})
+                    this.setState({ foodNames: res.data ? res.data : []})
                 }
             }
         )
@@ -73,7 +73,7 @@ class ReactionTracker extends Component {
         axios(optReactionNames).then(
             res => {
                 if (res.status === 200) {
-                    this.setState({ reactionNames: res.data})
+                    this.setState({ reactionNames: res.data ? res.data : []})
                 }
             }
         )
@@ -90,7 +90,7 @@ class ReactionTracker extends Component {
         axios(optReactionNames).then(
             res => {
                 if (res.status === 200) {
-                    this.setState({ reactions: res.data })
+                    this.setState({ reactions: res.data ? res.data : [] })
                 }
             }
         )
@@ -113,12 +113,7 @@ class ReactionTracker extends Component {
                     // send another request to get state.reactions
                     // or update state.reactions
                     this.setState((prevState, _) => ({ // update state.reactions
-                        reactions: prevState.reactions.length === 0 ? [prevState.newRaction] : [...prevState.reactions, prevState.newRaction],
-                        newRaction: {
-                            reaction_date:"",
-                            food_name: "",
-                            reaction_name:[]            
-                        }
+                        reactions: prevState.reactions.length === 0 ? [prevState.newRaction] : [...prevState.reactions, prevState.newRaction]
                     }))
                 }
             }
