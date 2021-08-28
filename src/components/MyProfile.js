@@ -61,7 +61,6 @@ class MyProfile extends Component {
     handleRerender = () => {
         setTimeout(() => {
                 this.fetchPets();
-                this.forceUpdate();
             },
             800
         )
@@ -89,7 +88,6 @@ class MyProfile extends Component {
                     <div>
                         <h3 style={{ marginBottom: 16 }}>My Pets:</h3>
                         <List
-                            // bordered
                             grid={{ gutter: 16,
                                 xs: 1,
                                 sm: 2,
@@ -103,12 +101,14 @@ class MyProfile extends Component {
                                     <List.Item>
                                         <Card title={pet.name} bordered={true} extra={<EditPet fetchPets={this.fetchPets} pet={pet} handleRerender={this.handleRerender}/>}>
                                             <Card.Meta className="PetPhoto"
-                                                    avatar={<Avatar src={pet.photo} />}
-                                                    description={pet.name}
+                                                       avatar={<Avatar src={pet.photo} size={150} />}
+
                                             />
-                                            <p>{pet.pet}</p>
-                                            <p>{pet.breed}</p>
-                                            <p>{pet.ageyear} years {pet.agemonth} months old, {pet.weight} lbs</p>
+                                            <p className="main-text" style={{"color": "lightsteelblue", "font-size": "16px"}}>{pet.type}</p>
+                                            <p className="main-text">{pet.weight} lbs</p>
+                                            <p className="main-text">{pet.ageyear} years {pet.agemonth} months old</p>
+                                            <p className="main-text">Sex: {pet.sex}</p>
+                                            <p className="main-text">Breed: {pet.breed}</p>
                                         </Card>
                                     </List.Item>
                                 </div>
